@@ -28,11 +28,8 @@ Power = 1 - β:
   효과 있을 때 탐지할 확률 (보통 0.8)
   
 |  | 실제 효과 없음 (H0 참) | 실제 효과 있음 (H1 참) |
-
 |---|---|---|
-
 | 효과 없음이라고 판단 (H0 채택) | True Negative | False Negative (β) |
-
 | 효과 있다고 판단 (H0 기각) | False Positive (α) | True Positive (Power = 1-β) |
 
 ### 해석
