@@ -380,3 +380,22 @@ Primary Metric이 좋아져도 Guardrail Metric이 크게 악화되면 실험은
 - [ ] Sanity Check 완료
 - [ ] 결과 해석 수행
 - [ ] 의사결정 진행
+
+
+# Interview Questions
+
+### Q. SRM이 발생하면 어떻게 하시겠습니까?
+
+SRM은 무작위 배정 또는 데이터 수집 과정에 문제가 발생했다는 강한 신호입니다.
+분석 단계에서 보정하기보다 원인을 파악하고 재실험하는 것이 원칙입니다.
+
+### Q. SRM이 없으면 실험이 정상이라고 볼 수 있나요?
+
+아닙니다.
+SRM은 비율 이상 여부만 확인할 뿐이며,
+Baseline Parity 검증을 통해 그룹 특성 균형도 추가 확인해야 합니다.
+
+### Q. AA Test와 Sanity Check의 차이는 무엇인가요?
+
+AA Test는 실험 전 시스템 검증,
+Sanity Check는 실험 중/후 실험 품질 검증입니다.
