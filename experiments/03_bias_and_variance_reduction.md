@@ -126,41 +126,349 @@ CTR이 낮아 노출되지 않은 캠페인을 제외하고 분석
 
 ---
 
-# 4. Missing Not At Random (MNAR)
+# 4. Missing Data
 
 ## 정의
 
-누락 자체가 결과와 관련되어 있는 경우
+데이터가 누락(Missing)된 상황
+
+누락 원인에 따라 결과 해석과 대응 방법이 달라진다.
+
+실무에서는 Missing Data를 크게 세 가지 유형으로 구분한다.
+
+| 유형 | 의미 | 편향 위험 |
+|--------|--------|--------|
+| MCAR | Missing Completely At Random | 낮음 |
+| MAR | Missing At Random | 중간 |
+| MNAR | Missing Not At Random | 높음 |
 
 ---
 
-## 예시
+## 4.1 MCAR (Missing Completely At Random)
+
+### 정의
+
+누락 여부가 어떤 변수와도 관련이 없는 경우
+
+즉,
+
+```text
+누락이 완전히 랜덤하게 발생
+```
+
+하는 상황
+
+---
+
+### 예시
+
+설문 응답 데이터 중
+
+```text
+서버 장애로 일부 데이터 유실
+```
+
+---
+
+### 특징
+
+- 가장 이상적인 누락 형태
+- 편향(Bias)은 거의 발생하지 않음
+- 표본 크기 감소 문제만 존재
+
+---
+
+### 진단 방법
+
+- 누락 패턴 확인
+- 누락 여부와 주요 변수 간 관계 분석
+
+---
+
+### 대응 방법
+
+- Listwise Deletion (단순 제거)
+- Mean/Median Imputation
+- Multiple Imputation
+
+---
+
+## 4.2 MAR (Missing At Random)
+
+### 정의
+
+누락 여부가 관측 가능한 변수(Observed Variable)로 설명 가능한 경우
+
+---
+
+### 예시
+
+설문 응답률
+
+```text
+20대 : 응답률 높음
+50대 : 응답률 낮음
+```
+
+연령 정보를 알고 있다면 누락 원인을 설명할 수 있음
+
+---
+
+### 특징
+
+```text
+Missingness
+↓
+Observed Variable로 설명 가능
+```
+
+---
+
+### 진단 방법
+
+- Missing Pattern 분석
+- Missing Indicator 생성
+- 응답자 vs 비응답자 비교
+
+예시
+
+- 연령
+- 성별
+- 디바이스
+- 지역
+
+---
+
+### 대응 방법
+
+- Multiple Imputation
+- Regression Imputation
+- Reweighting
+- Inverse Probability Weighting (IPW)
+
+---
+
+## 4.3 MNAR (Missing Not At Random)
+
+### 정의
+
+누락 여부 자체가 결과 변수와 관련된 경우
+
+---
+
+### 예시
 
 만족도 설문
 
 ```text
-만족한 사용자만 응답
-불만족 사용자는 응답 안 함
+만족한 사용자
+→ 응답
+
+불만족 사용자
+→ 응답하지 않음
 ```
 
-결과
+---
 
-만족도가 과대평가됨
+### 특징
+
+```text
+Missingness
+↓
+Outcome 자체와 관련
+```
+
+가장 위험한 Missing Data 유형
 
 ---
 
-## 진단 방법
+### 진단 방법
 
-- Missing Pattern 확인
-- 응답자 vs 비응답자 비교
+엄밀하게는 직접 검증이 불가능
+
+간접적으로 추정
+
+- Missing Pattern 분석
+- Domain Knowledge 활용
+- Sensitivity Analysis
 
 ---
 
-## 완화 방법
+### 대응 방법
 
 - Multiple Imputation
 - Sensitivity Analysis
-- 데이터 수집 구조 개선
+- 추가 데이터 수집
+- 설문 구조 개선
+
+---
+
+## MCAR vs MAR vs MNAR 비교
+
+| 구분 | MCAR | MAR | MNAR |
+|--------|--------|--------|--------|
+| 누락 원인 | 완전 랜덤 | 관측 변수로 설명 가능 | 결과 자체와 관련 |
+| 편향 위험 | 낮음 | 중간 | 높음 |
+| 진단 가능성 | 쉬움 | 가능 | 어려움 |
+| 분석 영향 | 적음 | 보정 가능 | 심각 |
+| 대표 대응 | 제거 가능 | Imputation | Sensitivity Analysis |
+
+---
+
+## 실무 예시
+
+### 광고 로그
+
+#### MCAR
+
+```text
+서버 장애로 로그 일부 유실
+```
+
+---
+
+### 회원 프로필
+
+#### MAR
+
+```text
+고연령 사용자 응답률 낮음
+```
+
+연령 정보로 설명 가능
+
+---
+
+### 만족도 조사
+
+#### MNAR
+
+```text
+불만족 사용자가 응답하지 않음
+```
+
+만족도 자체가 누락 원인
+
+---
+
+## Missing Data 분석 프로세스
+
+### Step 1. 누락 패턴 확인
+
+- Missing Rate 계산
+- 변수별 Missing 확인
+
+---
+
+### Step 2. 누락 원인 추정
+
+MCAR / MAR / MNAR 분류
+
+---
+
+### Step 3. 적절한 처리 방법 선택
+
+| 상황 | 권장 방법 |
+|--------|--------|
+| MCAR | 제거 또는 단순 대체 |
+| MAR | Multiple Imputation |
+| MNAR | Sensitivity Analysis |
+
+---
+
+### Step 4. 결과 민감도 검증
+
+- Missing 처리 방식 변경
+- 결과 변화 확인
+
+---
+
+## Sensitivity Analysis
+
+### 정의
+
+누락 데이터에 대한 가정을 변경해도 결과가 유지되는지 검증하는 방법
+
+---
+
+### 예시
+
+Case 1
+
+```text
+누락값 = 평균값
+```
+
+---
+
+Case 2
+
+```text
+누락값 = 최악의 값
+```
+
+---
+
+Case 3
+
+```text
+누락값 = 최선의 값
+```
+
+---
+
+세 가지 경우 모두 결과가 유사하면
+
+```text
+Robust Result
+```
+
+로 판단 가능
+
+---
+
+## Interview Questions
+
+### Q. MCAR, MAR, MNAR의 차이를 설명해주세요.
+
+MCAR는 누락이 완전히 랜덤하게 발생한 경우이고,
+MAR는 관측 가능한 변수로 누락을 설명할 수 있는 경우,
+MNAR는 누락 여부 자체가 결과 변수와 관련된 경우입니다.
+
+실무에서는 MNAR이 가장 위험하며, 관측 데이터만으로 완전히 보정하기 어렵습니다.
+
+---
+
+### Q. 가장 위험한 Missing Data 유형은 무엇인가요?
+
+MNAR입니다.
+
+누락 자체가 결과 변수와 관련되어 있기 때문에 관측 데이터만으로 편향을 제거하기 어렵습니다.
+
+---
+
+### Q. MNAR인지 어떻게 확인하나요?
+
+엄밀하게는 직접 확인할 수 없습니다.
+
+대신
+
+- Missing Pattern 분석
+- Domain Knowledge
+- Sensitivity Analysis
+
+를 통해 영향 범위를 추정합니다.
+
+---
+
+### Q. Missing Data가 많으면 어떻게 하시겠습니까?
+
+1. 누락 패턴 확인
+2. MCAR / MAR / MNAR 분류
+3. 적절한 Imputation 수행
+4. Sensitivity Analysis로 결과 견고성 검증
+
+순서로 접근합니다.
 
 ---
 
